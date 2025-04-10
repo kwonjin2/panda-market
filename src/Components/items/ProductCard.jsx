@@ -1,4 +1,4 @@
-import heartIcon from "../../assets/heart-icon.png";
+import heartIcon from "../../assets/heart-Icon.png";
 
 const ProductCard = ({ product, cardType = "best" }) => {
   return (

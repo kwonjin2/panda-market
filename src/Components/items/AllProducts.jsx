@@ -1,6 +1,6 @@
 import Pagination from "./Pagination";
 import AllProductHeader from "./AllProductHeader";
-import ProductList from "./productList";
+import ProductList from "./ProductList";
 import useAllProductsController from "./useAllProductsController";
 
 const AllProcuts = () => {

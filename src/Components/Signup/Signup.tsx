@@ -1,5 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import FormInput from "../Common/FormInput";
 import pandaLogo from "../../assets/panda-logo.png";
 import kakaoImg from "../../assets/kakao.png";
@@ -7,11 +8,14 @@ import googleImg from "../../assets/google.png";
 import eyesOn from "../../assets/eyes-on.png";
 import eyes from "../../assets/eyes.png";
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmError, setConfirmError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -35,13 +39,30 @@ const Login = () => {
     }
   };
 
-  const isFormValid =
-    email && password && emailError === "" && passwordError === "";
+  const validateConfirmPassword = () => {
+    if (confirmPassword.trim() === "") {
+      setConfirmError("비밀번호를 입력해주세요.");
+    } else if (confirmPassword !== password) {
+      setConfirmError("비밀번호가 일치하지 않습니다.");
+    } else {
+      setConfirmError("");
+    }
+  };
 
-  const handleSubmit = (e) => {
+  const isFormValid =
+    email &&
+    nickname &&
+    password &&
+    confirmPassword &&
+    !emailError &&
+    !passwordError &&
+    !confirmError;
+
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     validateEmail();
     validatePassword();
+    validateConfirmPassword();
 
     if (isFormValid) {
       navigate("/items");
@@ -67,61 +88,106 @@ const Login = () => {
             <FormInput
               type="text"
               id="email"
-              placeholder="이메일을 입력해주세요"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onBlur={validateEmail}
+              placeholder="이메일을 입력해주세요"
               className={`input-primary tablet:h-[64px] pc:h-[72px] ${
                 emailError ? "border border-red-500 mb-[8px]" : ""
               }`}
             />
             {emailError && (
-              <p className="text-red-500 text-sm mt-[4px] ml-[16px]">
+              <p className="text-red-500 text-sm mt-[4px] ml-[16px] mb-[16px]">
                 {emailError}
               </p>
             )}
 
-            <label htmlFor="password" className="label-primary mt-[24px]">
+            <label htmlFor="nickname" className="label-primary">
+              닉네임
+            </label>
+            <FormInput
+              type="text"
+              id="nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="닉네임을 입력해주세요"
+              className="input-primary tablet:h-[64px] pc:h-[72px]"
+            />
+
+            <label htmlFor="password" className="label-primary">
               비밀번호
             </label>
             <div className="relative">
               <FormInput
                 type={showPassword ? "text" : "password"}
                 id="password"
-                placeholder="비밀번호를 입력해주세요"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={validatePassword}
+                placeholder="비밀번호를 입력해주세요"
                 className={`input-primary tablet:h-[64px] pc:h-[72px] ${
                   passwordError ? "border border-red-500 mb-[8px]" : ""
                 }`}
               />
               <button
                 type="button"
-                className="absolute top-[16px] right-[24px] flex justify-center items-center tablet:top-[20px] pc:top-[24px]"
                 onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-[16px] right-[24px] flex justify-center items-center tablet:top-[20px] pc:top-[24px]"
               >
                 <img
                   src={showPassword ? eyesOn : eyes}
-                  alt="eyes toggle"
+                  alt="eyes icon"
                   className="w-[24px] h-[24px]"
                 />
               </button>
             </div>
             {passwordError && (
-              <p className="text-red-500 text-sm mt-[4px] ml-[16px]">
+              <p className="text-red-500 text-sm mt-[4px] ml-[16px] mb-[16px]">
                 {passwordError}
+              </p>
+            )}
+
+            <label htmlFor="confirm-password" className="label-primary">
+              비밀번호 확인
+            </label>
+            <div className="relative">
+              <FormInput
+                type={showPassword ? "text" : "password"}
+                id="confirm-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onBlur={validateConfirmPassword}
+                placeholder="비밀번호를 입력해주세요"
+                className={`input-primary tablet:h-[64px] pc:h-[72px] ${
+                  confirmError ? "border border-red-500 mb-[8px]" : ""
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-[16px] right-[24px] flex justify-center items-center tablet:top-[20px] pc:top-[24px]"
+              >
+                <img
+                  src={showPassword ? eyesOn : eyes}
+                  alt="eyes icon"
+                  className="w-[24px] h-[24px]"
+                />
+              </button>
+            </div>
+            {confirmError && (
+              <p className="text-red-500 text-sm mt-[4px] ml-[16px]">
+                {confirmError}
               </p>
             )}
 
             <button
               type="submit"
               disabled={!isFormValid}
-              className={`w-full h-[56px] rounded-[40px] text-white font-semibold text-[20px] flex justify-center items-center mb-[24px] mt-[24px] ${
+              className={`w-full h-[56px] mt-[24px] rounded-[40px] text-white font-semibold text-[20px] flex justify-center items-center mb-[24px] ${
                 isFormValid ? "bg-[#3692FF]" : "bg-gray-400 cursor-not-allowed"
               }`}
             >
-              로그인
+              회원가입
             </button>
           </form>
 
@@ -144,9 +210,9 @@ const Login = () => {
           </div>
 
           <div className="flex justify-center gap-[4px] pb-[100px] text-[14px]">
-            <span className="text-[#1F2937]">판다마켓이 처음이신가요?</span>
-            <Link to={"/signup"} className="text-[#3692FF]">
-              회원가입
+            <span className="text-[#1F2937]">이미 회원이신가요?</span>
+            <Link to={"/login"} className="text-[#3692FF]">
+              로그인
             </Link>
           </div>
         </div>
@@ -155,4 +221,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
